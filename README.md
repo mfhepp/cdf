@@ -14,11 +14,42 @@ addfav foobar
 cdf foobar
 ```
 
+**Auto-complete works with `cdf`:** It is sufficient to type the first letters of the name of a shortcut plus the <kbd>Tab</kbd> key.
+
 ## Installation (UNIX/OSX only)
+
+**Note:** Always backup your `~/.bashrc` or `~/.bash_profile` files prior to installing this tool. If not, please do not blame me if things go wrong.
+
 ### Simple
 
-1. Create a directory in your home directory, e.g. `~/myshortcuts`, either in the OSX Finder or a terminal window with `mkdir ~/myshortcuts`. (On OSX, it is better to put this somewhere under the `~/Documents` folder due to Apple's default permissions scheme.)
-2. Depending on your system, open either `~/.bashrc` or `~/.bash_profile` with a text editor. You may need to turn on the display of hidden files (starting with a dot) in the OSX Finder with <kbd>Command + Shift + .</kbd>.
+1. Download the tool from Github to your computer
+  - **Option 1:** With `git clone`:
+    ```bash
+    mkdir some_directory
+    cd some_directory
+    git clone https://github.com/mfhepp/cdf.git
+    # Git will create a folder named cdf/
+    cd cdf
+    ```
+  - **Option 2:** Download and extract ZIP from <https://github.com/mfhepp/cdf/zipball/main>
+2. Open a terminal window in the respective directory.
+3. Run the install script `install.sh`
+    ```bash
+    # Make it executable
+    chmod +x install.sh
+    # Run script
+    ./install.sh
+    ```
+4. Open a new terminal window for the changes to take effect.
+
+### Manual
+
+1. Create a directory in your home directory, e.g. `~/myshortcuts`, either in the OSX Finder or a terminal window with 
+    ```bash
+    mkdir ~/myshortcuts
+    ```
+    On OSX, it is better to put this somewhere under the `~/Documents` folder due to Apple's default permissions scheme.
+2. Depending on your system, open either `~/.bashrc` or `~/.bash_profile` with a text editor. You may need to turn on the display of hidden files (starting with a dot) in the OSX Finder with <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>.</kbd> (dot).
 3. At the end of the `~/.bashrc` or `~/.bash_profile` file, insert the following lines:
     ```bash
     export CDFPATH=~/myshortcuts
@@ -26,29 +57,6 @@ cdf foobar
     Replace `~/myshortcuts` with the absolute path of your chosen directory for the shortcuts (e.g. `~/Documents/myshortcuts`; note that `~/` is a shortcut for your user directory on Unix systems; you can also use the full path.). **Save the file, but keep it open.**
 4. After these lines, insert the entire contents from the `cdf.sh` file from this repository. **Save and close the `~/.bashrc` or `~/.bash_profile` file.
 5. Open a new terminal window or run `source ~/.bashrc` or `source ~/.bash_profile` in open terminal window to activate the changes.
-
-### Via Git
-
-1. Follow the steps 1 - 3 from above.
-2. Clone this Github repository to a directory of your choice:
-    ```bash
-    cd some_directory
-    git clone https://github.com/mfhepp/cdf.git
-    ```
-    On OSX, it is strongly recommended to put this somewhere under the `~/Documents` folder due to Apple's default permissions scheme or to change the permissions of the directory manually via `chmod`. Otherwise, other users on the system could modify the executed script.
-3. Go to the newly created directory and check that that it contains `cdf.sh`:
-    ```bash
-    cd cdf
-    ls $PWD/*.sh
-    ```
-    This will also show the absolute path of the file, like so: `/Users/myname/Documents/cdf/cdf.sh`. **Remember this path.**
-4. In the `~/.bashrc` or `~/.bash_profile` file, insert the following lines **after the `export` command above**, with the actual path for `cdf.sh` on your computer (see step 3):
-    ```bash
-    source /Users/myname/Documents/cdf/cdf.sh
-    ```
-    Instead of `/Users/myname/...`, you can also write `~/` (like so: `~/Documents/cdf/cdf.sh`). `Documents/` is the location to where you cloned this repository.
-5. Open a new terminal window or run `source ~/.bashrc` or `source ~/.bash_profile` in open terminal window to activate the changes.
-
 
 ## Usage
 
@@ -117,13 +125,13 @@ Example:
 
 ## Technical Details
 
-The tool creates *symbolic links* to the bookmarked paths in the chosen directory. When running `cdf`, we simply execute `cd` to that symbolic link, if it exists. However, as we want to end up in the real path, it runs `cd $(realpath .)` at the very end to make sure we see the physical location and not that of the symbolic link.
+The tool creates *symbolic links* pointing to the bookmarked paths in the chosen directory. When running `cdf`, we simply execute `cd` to that symbolic link, if it exists. However, as **we want to end up in the *real* path,** it runs `cd $(realpath .)` at the very end to make sure we see the physical location and not that of the symbolic link.
 
 It is possible to use the `CDPATH` variable for similar purposes, but this has several downsides. One could also change the behavior of the original `cd` command, but I think it is bad practice to mess around with core OS components in an intransparent way; hence the usage of a new `cdf` command.
 
-The script tries to prevent you from creating shortcuts to locations that are themselves symbolic links.
+The script tries to prevent you from creating shortcuts to locations that are themselves symbolic links. 
 
-## Warning! Be careful when deleting symbolic links!
+## Serious Warning: Be CAREFUL when DELETING symbolic links!
 
 This tool uses [symbolic links](https://en.wikipedia.org/wiki/Symbolic_link). While this an established part of any Unix-like environment, things can go terribly wrong **when deleting symbolic links**. In the **worst case, you can delete ALL CONTENTS of the target of a symbolic link** when you are **trying to delete the symbolic link.**
 
@@ -142,6 +150,8 @@ rm -r bar
 ```
 
 **Recommendation:** When unsure, **use** a GUI tool like the **OSX Finder for deleting symbolic links.**
+
+This warning is mostly relevant when you are trying to remove previously created symbolic links in the respective folder.
 
 ## Security
 
@@ -170,12 +180,14 @@ Pictures/
 
 This is because OSX, by default, grants at least read-access to all users on the given machine, via the `staff` usergroup.
 
-If you use the `source` command to include the `cdf.sh` script within your `.bashrc` or `.bashprofile` file, you must make sure that the respective directory cannot be written to by other users. Otherwise, someone could inject arbitrary Bash commands into your environment.
+If you were to use the `source` command to include the `cdf.sh` script within your `.bashrc` or `.bashprofile` file, you must make sure that the respective directory cannot be written to by other users. Otherwise, someone could inject arbitrary Bash commands into your environment. **This is why the install script instead *copies the contents of that script* to your Bash profile.**
 
 ## Credits and Acknowledgments
 
-This tool was inspired by the following article:
+This tool was initially inspired by the following article:
 
 - <https://medium.com/@marko.luksa/linux-osx-shell-trick-create-bookmarks-so-you-can-cd-directly-into-the-dirs-you-use-regularly-64003051211f>
 
-The proposed approach has the problem that you end up in the symbolic link directory, not the realpath thereof, which can be confusing and intransparent.
+While the proposed approach works, it has a few limitations, namely that you end up in the symbolic link directory, not the physical `realpath` thereof, which can be confusing and intransparent.
+
+ChatGPT 4 was a great buddy and time-saver, helping me through the many pitfalls of Bash as the grand, old lady of scripting languages.
