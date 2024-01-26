@@ -1,17 +1,27 @@
-# cdf: Change to favorite directories in Bash / Terminal
+# cdf: Change to favorite directories 
 
-It is often time-consuming to navigate your folder structure in a Bash terminal window, even with autocomplete.
+It is often time-consuming to navigate your folder structure in a Bash terminal window, even with auto-complete.
 
-This simple set of functions to be copied to your `.bashrc` or `.bashprofile` file will provide two new commands, `addfav` and `cdf`:
+`cdf` is a simple set of utility functions that can be added to your `.bashrc` or `.bash_profile` file and will provide two quite useful new commands, `addfav` ("add to favorites") and `cdf` ("`cd` to favorite"):
+
+## Demo
 
 ```bash
-# add the current directory under the shortcut foobar
-addfav foobar
+cd ~/the/windy/road/to/my/many/papers
+# Add the current directory under the shortcut papers
+addfav papers
+
+cd ~/my/long/forgotten/photos
+# Add the current directory under the shortcut pics
+addfav pics
 ```
 
 ```bash
-# Change to the directory named foobar from anywhere
-cdf foobar
+# Go to the directory via its short name from wherever you are
+cdf pics
+# Your are now here: ~/my/long/forgotten/photos
+cdf papers
+# Your are now here: ~/the/windy/road/to/my/many/papers
 ```
 
 **Auto-complete works with `cdf`:** It is sufficient to type the first letters of the name of a shortcut plus the <kbd>Tab</kbd> key.
@@ -140,12 +150,14 @@ For more information, read [superuser.com: Does rm -rf follow symbolic links?](h
 In short: **A single slash will make a huge difference!!!**
 
 ```bash
-# This will DELETE ALL FILES in the directory to which the symbolic link `bar` points!!!
+# This will DELETE ALL FILES in the directory to which 
+# the symbolic link `bar` points!!!
 rm -r bar/
 ```
 
 ```bash
-# This will only delete the symbolic link `bar` itself and leave the files in the link target untouched.
+# This will only delete the symbolic link `bar` itself 
+# and leave the files in the link target untouched.
 rm -r bar
 ```
 
@@ -180,7 +192,7 @@ Pictures/
 
 This is because OSX, by default, grants at least read-access to all users on the given machine, via the `staff` usergroup.
 
-If you were to use the `source` command to include the `cdf.sh` script within your `.bashrc` or `.bashprofile` file, you must make sure that the respective directory cannot be written to by other users. Otherwise, someone could inject arbitrary Bash commands into your environment. **This is why the install script instead *copies the contents of that script* to your Bash profile.**
+If you were to use the `source` command to include the `cdf.sh` script within your `.bashrc` or `.bash_profile` file, you must make sure that the respective directory cannot be written to by other users. Otherwise, someone could inject arbitrary Bash commands into your environment. **This is why the install script instead *copies the contents of that script* to your Bash profile.**
 
 ## Credits and Acknowledgments
 
@@ -191,3 +203,18 @@ This tool was initially inspired by the following article:
 While the proposed approach works, it has a few limitations, namely that you end up in the symbolic link directory, not the physical `realpath` thereof, which can be confusing and intransparent.
 
 ChatGPT 4 was a great buddy and time-saver, helping me through the many pitfalls of Bash as the grand, old lady of scripting languages.
+
+## Contact
+
+**Univ.-Prof. Dr. Martin Hepp**
+
+E-Business and Web Science Research Group<br>
+Chair of General Management and E-Business<br>
+Universität der Bundeswehr München<br>
+Werner-Heisenberg-Weg 39<br>
+D-85579 Neubiberg, Germany<br><br>
+
+**eMail:** martin.hepp@unibw.de<br>
+**Web:** https://www.heppnetz.de/<br>
+**Web:** https://www.unibw.de/ebusiness/<br>
+
