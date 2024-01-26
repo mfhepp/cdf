@@ -208,11 +208,10 @@ ChatGPT 4 was a great buddy and time-saver, helping me through the many pitfalls
 
 **Univ.-Prof. Dr. Martin Hepp**
 
-E-Business and Web Science Research Group<br>
-Chair of General Management and E-Business<br>
+Chair of Web Science and Digitalisation<br>
 Universität der Bundeswehr München<br>
 Werner-Heisenberg-Weg 39<br>
-D-85579 Neubiberg, Germany<br><br>
+85579 Neubiberg, Germany<br><br>
 
 **eMail:** martin.hepp@unibw.de<br>
 **Web:** <https://www.heppnetz.de/><br>
