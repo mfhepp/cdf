@@ -215,6 +215,6 @@ Werner-Heisenberg-Weg 39<br>
 D-85579 Neubiberg, Germany<br><br>
 
 **eMail:** martin.hepp@unibw.de<br>
-**Web:** https://www.heppnetz.de/<br>
-**Web:** https://www.unibw.de/ebusiness/<br>
+**Web:** <https://www.heppnetz.de/><br>
+**Web:** <https://www.unibw.de/ebusiness/><br>
 
