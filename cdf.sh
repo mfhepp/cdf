@@ -37,6 +37,9 @@ _cdf_list() {
 
 addfav() {
    # Define addfav command, adds PWD as a symbolic link
+   if ! _cdf_check_path; then
+     return 1
+   fi
    if [ $# -eq 0 ] || [ "$1" = "--help" ]; then
       printf "ADDFAV: Adds the current directory as a shortcut to CDFPATH\n"
       printf 'Usage: addfav NAME\n\n'
@@ -45,15 +48,9 @@ addfav() {
       printf '  addfav --help:    Show help\n'
       printf '  addfav --list:    List all available shortcuts\n'
    elif [ "$1" = "--list" ]; then
-      if ! _cdf_check_path; then
-        return 1
-      fi
       # List all available shortcuts
       _cdf_list
    else
-      if ! _cdf_check_path; then
-        return 1
-      fi
       # Check that the current directory is neither the place for the symlinks nor a subdirectory therof
       CURRENT_DIR=$(pwd)
       if [[ "$CURRENT_DIR" = "$CDFPATH" || "$CURRENT_DIR" == "$CDFPATH"/* ]]; then
@@ -78,6 +75,9 @@ addfav() {
 
 cdf() {
    # Define cdf command ("change to favorite")
+   if ! _cdf_check_path; then
+      return 1
+   fi
    if [ $# -eq 0 ] || [ "$1" = "--help" ]; then
       printf "CDF: Change to a directory via a shortcut from CDFPATH\n"
       printf 'Usage: cdf NAME\n\n'
@@ -86,17 +86,10 @@ cdf() {
       printf '  cdf --help:    Show help\n'
       printf '  cdf --list:    List all available shortcuts\n\n'
       printf 'Hint: Use the TAB key for autocomplete with available shortcuts\n'
-
    elif [ "$1" = "--list" ]; then
-      if ! _cdf_check_path; then
-        return 1
-      fi
       # List all available shortcuts
       _cdf_list
    else
-      if ! _cdf_check_path; then
-        return 1
-      fi
       filepath="$CDFPATH"/"$1"
       if [ -L "$filepath" ]; then
          echo "Following the symbolic link: $filepath"
