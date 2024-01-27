@@ -16,6 +16,10 @@ fi
 if ! command -v ln >/dev/null 2>&1; then
     printf "ERROR: The required ln command is not supported on this platform.\n"
     exit 1
+fi 
+if ! command -v find >/dev/null 2>&1; then
+    printf "ERROR: The required find command is not supported on this platform.\n"
+    exit 1
 fi   
 printf "Dependencies found.\n"
 if [ -z "${CDFPATH}" ]; then
