@@ -222,9 +222,12 @@ There are several other very popular tools for similar purposes, e.g.
 
 Main differences between `cdf` and most of these are as follows:
 
-- `cdf` uses explicitly set shortcuts instead of a usage-based list of target paths. You will know where you'll end up and you can define catchy names for the core places in your file system.
-- `cdf` is very lightweight, has no dependencies except for Bash, and does not require the installation of binaries. Hence, the risk of supply-chain attacks is minimal.
-- `cdf` provides **just two functions:** (1) defining a short identifier for a directory and (2) a quick way to get to any previously defined location in your file-system. 
+- `cdf` **uses explicitly set shortcuts instead of a usage-based list** of target paths. You will know where you'll end up and you can define catchy names for the core places in your file system.
+- `cdf` **is very lightweight** (ca. 100 lines of Bash including comments), has **no dependencies** except for Bash, and does not require the installation of binaries. Hence, the risk of supply-chain attacks is minimal.
+- `cdf` **provides just two functions:** (1) defining a short identifier for a directory and (2) a quick way to get to any previously defined location in your file-system.
+- `cdf` **uses a simple folder with symbolic links** for managing the names and target locations of shortcuts.
+- `cdf` **supports arbitrary names for any target path** that are **easy to remember.** You can use **very short names for your most popular directories;** like a simple form of [entropy coding](https://en.wikipedia.org/wiki/Entropy_coding).
+
 
 ## Contact
 
