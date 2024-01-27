@@ -1,7 +1,6 @@
 #!/bin/bash
 # TODO: Refactor to functions so that cleanup will work also if test fails
 
-
 # Set-up fixture
 source ../cdf.sh
 BACKUP_PATH=$CDFPATH
