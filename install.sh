@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # install.sh
-# Version 0.1
+# Version 0.3
 # (C) 2024 by Martin Hepp, https://www.heppnetz.de
 # Github repository: https://github.com/mfhepp/cdf
 # Available under the MIT License
@@ -20,7 +20,7 @@ fi
 if ! command -v find >/dev/null 2>&1; then
     printf "ERROR: The required find command is not supported on this platform.\n"
     exit 1
-fi   
+fi 
 printf "Dependencies found.\n"
 if [ -z "${CDFPATH}" ]; then
     # Default directory suffix for shortcuts (relative to $HOME)
