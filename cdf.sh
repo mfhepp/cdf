@@ -27,7 +27,8 @@ _cdf_list() {
    echo
    printf "Existing directory shortcuts are:\n"
    # Note: We are looking for symbolic links, hence l
-   find $CDFPATH -maxdepth 1 -type l  -exec basename {} \; | sort | sed 's/^/ - /'
+   # Old version: find $CDFPATH -maxdepth 1 -type l  -exec basename {} \; | sort | sed 's/^/ - /'
+   for link in ./*; do echo " - $(basename "$link")  [$(readlink -f "$link")]"; done
    echo
 }
 
