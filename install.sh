@@ -7,15 +7,20 @@
 # Available under the MIT License
 
 echo "Installing CDF (CD from Favorites)"
-# Default directory suffix for shortcuts (relative to $HOME)
-default_suffix="shortcuts"
-# Prompt the user for the installation directory suffix
-read -p "Enter the name of the directory for shortcuts within $HOME [$default_suffix]: " install_suffix
-# Use the default if no input is provided
-install_suffix=${install_suffix:-$default_suffix}
-# Full installation directory path
-install_dir="$HOME/$install_suffix"
-echo "Directory for shortcuts is set to: $install_dir"
+if [ -z "${CDFPATH}" ]; then
+    # Default directory suffix for shortcuts (relative to $HOME)
+    default_suffix="shortcuts"
+    # Prompt the user for the installation directory suffix
+    read -p "Enter the name of the directory for shortcuts within $HOME [$default_suffix]: " install_suffix
+    # Use the default if no input is provided
+    install_suffix=${install_suffix:-$default_suffix}
+    # Full installation directory path
+    install_dir="$HOME/$install_suffix"
+    echo "Directory for shortcuts is set to: $install_dir"
+else
+    echo "Using existing CDFPATH: $CDFPATH"
+    install_dir="$CDFPATH"
+fi
 mkdir -p $install_dir
 # Check if both ~/.bash_profile and ~/.bashrc exist
 if [ -f "$HOME/.bash_profile" ] && [ -f "$HOME/.bashrc" ]; then
