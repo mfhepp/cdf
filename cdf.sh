@@ -32,7 +32,7 @@ _cdf_check_environment() {
 
 # Function to check if name for shortcut is a safe name for the symbolic link
 _validate_basename() {
-    local input=$1
+    local input="$1"
     if [ -z "$input" ]; then
        # echo "ERROR: Argument is empty."
        return 1
@@ -83,7 +83,7 @@ addfav() {
       # Check if we are INSIDE a symbolic link
       elif [ "$CURRENT_DIR" != $(realpath $CURRENT_DIR) ]; then
         printf "ERROR: You cannot create shortcuts to symbolic links\n"
-        printf "Hint: $CURRENT_DIR expands to $(realpath $CURRENT_DIR)\n"
+        printf "Hint: $CURRENT_DIR expands to $(realpath "$CURRENT_DIR")\n"
         return 1
       fi
       # Check if argument is a valid basename
