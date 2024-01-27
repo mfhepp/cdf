@@ -8,16 +8,16 @@ It is often time-consuming to navigate your folder structure in a Bash terminal 
 
 ```bash
 cd ~/the/windy/road/to/my/many/papers
-# Add the current directory under the shortcut papers
+# Add the current directory as a shortcut named "papers"
 addfav papers
 
 cd ~/my/long/forgotten/photos
-# Add the current directory under the shortcut pics
+# Add the current directory as a shortcut named "pics"
 addfav pics
 ```
 
 ```bash
-# Go to the directory via its short name from wherever you are
+# Go to a directory from wherever you are via its shortcut
 cdf pics
 # Your are now here: ~/my/long/forgotten/photos
 cdf papers
@@ -65,7 +65,7 @@ cdf papers
     export CDFPATH=~/myshortcuts
     ```
     Replace `~/myshortcuts` with the absolute path of your chosen directory for the shortcuts (e.g. `~/Documents/myshortcuts`; note that `~/` is a shortcut for your user directory on Unix systems; you can also use the full path.). **Save the file, but keep it open.**
-4. After these lines, insert the entire contents from the `cdf.sh` file from this repository. **Save and close the `~/.bashrc` or `~/.bash_profile` file.
+4. After these lines, insert the entire contents from the `cdf.sh` file from this repository. **Save and close the `~/.bashrc` or `~/.bash_profile` file.**
 5. Open a new terminal window or run `source ~/.bashrc` or `source ~/.bash_profile` in open terminal window to activate the changes.
 
 ## Usage
@@ -135,7 +135,7 @@ Example:
 
 ## Technical Details
 
-The tool creates *symbolic links* pointing to the bookmarked paths in the chosen directory. When running `cdf`, we simply obtain the **physical path** with `realpath` (available on most modern systems) and the `cd` to the that path, if it exists. Hence, **we end up in the *real physical location and not that of the symbolic link*.**
+The tool creates *symbolic links* pointing to the bookmarked paths in the chosen directory. When running `cdf`, we simply obtain the **physical path** with `realpath` (available on most modern systems) and the `cd` to that path, if it exists. Hence, **we end up in the *real physical location and not that of the symbolic link*.**
 
 It is possible to use the `CDPATH` variable for similar purposes, but this has several downsides. One could also change the behavior of the original `cd` command, but I think it is bad practice to mess around with core OS components in an intransparent way; hence the usage of a new `cdf` command.
 
@@ -223,7 +223,7 @@ There are several other very popular tools for similar purposes, e.g.
 Main differences between `cdf` and most of these are as follows:
 
 - `cdf` **uses explicitly set shortcuts instead of a usage-based list** of target paths. You will know where you'll end up and you can define catchy names for the core places in your file system.
-- `cdf` **is very lightweight** (ca. 150 lines of Bash including comments), has **no dependencies** except for Bash, and does not require the installation of binaries. Hence, the risk of supply-chain attacks is minimal.
+- `cdf` **is very lightweight** (ca. 150 lines of Bash including comments), has **no dependencies** except for Bash, `realpath`, `ln`, and `find` (available on most modern operating systems), and does not require the installation of binaries. Hence, the risk of supply-chain attacks is minimal.
 - `cdf` **provides just two functions:** (1) defining a short identifier for a directory and (2) a quick way to get to any previously defined location in your file-system.
 - `cdf` **uses a simple folder with symbolic links** for managing the names and target locations of shortcuts.
 - `cdf` **supports arbitrary names for any target path** that are **easy to remember.** You can use **very short names for your most popular directories;** like a simple form of [entropy coding](https://en.wikipedia.org/wiki/Entropy_coding).
