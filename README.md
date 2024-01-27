@@ -135,7 +135,7 @@ Example:
 
 ## Technical Details
 
-The tool creates *symbolic links* pointing to the bookmarked paths in the chosen directory. When running `cdf`, we simply execute `cd` to that symbolic link, if it exists. However, as **we want to end up in the *real* path,** it runs `cd $(realpath .)` at the very end to make sure we see the physical location and not that of the symbolic link.
+The tool creates *symbolic links* pointing to the bookmarked paths in the chosen directory. When running `cdf`, we simply obtain the **physical path** with `realpath` (available on most modern systems) and the `cd` to the that path, if it exists. Hence, **we end up in the *real physical location and not that of the symbolic link*.**
 
 It is possible to use the `CDPATH` variable for similar purposes, but this has several downsides. One could also change the behavior of the original `cd` command, but I think it is bad practice to mess around with core OS components in an intransparent way; hence the usage of a new `cdf` command.
 

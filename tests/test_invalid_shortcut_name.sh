@@ -36,7 +36,7 @@ test_invalid_arguments() {
     return 1
     fi
 
-    if ! _validate_basename ""; then
+    if _validate_basename ""; then
     echo "ERROR: Invalid empty argument not detected"
     return 1
     fi

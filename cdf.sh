@@ -128,16 +128,16 @@ cdf() {
       filepath="$CDFPATH"/"$1"
       if [ -L "$filepath" ]; then
          echo "Following the symbolic link: $filepath"
-         cd $filepath 
+         real_path=$(realpath "$filepath")
+         cd $real_path
          echo You are now here:
-         cd $(realpath .)
          echo "    $(pwd)"
       else
          echo "ERROR: Shortcut $1 does not exist as a symbolic link in $CDFPATH"
       fi
    fi
 }
-# Define autocomplete helper
+# Define autocomplete helper (currently limited to Bash)
 # Credits to ChatGPT 4
 _cdf_autocomplete() {
     local cur=${COMP_WORDS[COMP_CWORD]}
