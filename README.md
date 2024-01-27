@@ -204,6 +204,28 @@ While the proposed approach works, it has a few limitations, namely that you end
 
 ChatGPT 4 was a great buddy and time-saver, helping me through the many pitfalls of Bash as the grand, old lady of scripting languages.
 
+
+## Similar Projects
+
+There are several other very popular tools for similar purposes, e.g.
+
+- [autojump](https://github.com/wting/autojump)
+  - learns recently used directories
+  - requires Python
+- [z.sh](https://github.com/rupa/z)
+  - also tracks usage of directories
+  - supports regular expressions and parts of target paths
+- [zoxide](https://github.com/ajeetdsouza/zoxide)
+  - feature-rich
+  - written in Rust
+  - requires installation of a binary
+
+Main differences between `cdf` and most of these are as follows:
+
+- `cdf` uses explicitly set shortcuts instead of a usage-based list of target paths. You will know where you'll end up and you can define catchy names for the core places in your file system.
+- `cdf` is very lightweight, has no dependencies except for Bash, and does not require the installation of binaries. Hence, the risk of supply-chain attacks is minimal.
+- `cdf` provides **just two functions:** (1) defining a short identifier for a directory and (2) a quick way to get to any previously defined location in your file-system. 
+
 ## Contact
 
 **Univ.-Prof. Dr. Martin Hepp**
