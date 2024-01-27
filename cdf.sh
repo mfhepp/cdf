@@ -10,22 +10,22 @@
 _cdf_check_environment() {
    # Check if CDFPATH is set
    if [ -z "${CDFPATH}" ]; then
-      echo "ERROR: Favorites path not set via CDFPATH"
+      printf "ERROR: Favorites path not set via CDFPATH\n"
       return 1
    # Check if value is an existing directory
    elif [ ! -d "${CDFPATH}" ]; then
-      echo "ERROR: Favorites directory $CDFPATH does not exist"
+      printf "ERROR: Favorites directory $CDFPATH does not exist\n"
       return 1  # Exit the function with a non-zero status
    else
-      echo INFO: CDFPATH is set to $CDFPATH
+      printf "INFO: CDFPATH is set to $CDFPATH\n"
    fi
    # Check if realpath is available
    if ! command -v realpath >/dev/null 2>&1; then
-      echo "ERROR: The required realpath command is not supported on this platform."
+      printf "ERROR: The required realpath command is not supported on this platform\n"
       return 1
    fi
    if ! command -v ln >/dev/null 2>&1; then
-      echo "ERROR: The required ln command is not supported on this platform."
+      printf "ERROR: The required ln command is not supported on this platform\n"
       return 1
    fi   
 }
@@ -48,16 +48,15 @@ _validate_basename() {
 
 _cdf_list() {
    # List all available shortcuts   
-   echo Usage: cdf NAME
-   echo
+   printf "Usage: cdf NAME\n\n"
    printf "Existing directory shortcuts are:\n"
    # Note: We are looking for symbolic links, hence l
    # Old version: find $CDFPATH -maxdepth 1 -type l  -exec basename {} \; | sort | sed 's/^/ - /'
    # for link in ./*; do echo " - $(basename "$link")  [$(readlink -f "$link")]"; done
    find "$CDFPATH" -maxdepth 1 -type l -print0 | while IFS= read -r -d '' symlink; do
-      echo " - $(basename "$symlink")  [$(realpath "$symlink")]"
+      printf " - $(basename "$symlink")  [$(realpath "$symlink")]\n"
    done   
-   echo
+   printf "\n"
 }
 
 addfav() {
@@ -79,26 +78,31 @@ addfav() {
       # Check that the current directory is neither the place for the symlinks nor a subdirectory therof
       CURRENT_DIR=$(pwd)
       if [[ "$CURRENT_DIR" = "$CDFPATH" || "$CURRENT_DIR" == "$CDFPATH"/* ]]; then
-        echo "ERROR: You cannot create shortcuts to the shortcuts folder or its subdirectories"
+        printf "ERROR: You cannot create shortcuts to the shortcuts folder or its subdirectories\n"
         return 1
       # Check if we are INSIDE a symbolic link
       elif [ "$CURRENT_DIR" != $(realpath $CURRENT_DIR) ]; then
-        echo "ERROR: You cannot create shortcuts to symbolic links"
-        echo "Hint: $CURRENT_DIR expands to $(realpath $CURRENT_DIR)"
+        printf "ERROR: You cannot create shortcuts to symbolic links\n"
+        printf "Hint: $CURRENT_DIR expands to $(realpath $CURRENT_DIR)\n"
         return 1
       fi
       # Check if argument is a valid basename
       if ! _validate_basename "$1"; then
-         echo "ERROR: Invalid name for shortcut"
+         printf "ERROR: Invalid name for shortcut\n"
          return 1
       fi
       filepath="$CDFPATH/$1"
       if [ -e "$filepath" ]; then
-         echo "ERROR: Shortcut $1 is already in use (or another file or directory $filepath exists)"
+         printf "ERROR: Shortcut $1 is already in use (or another file or directory $filepath exists)\n"
          return 1
-      else
-         echo "Creating shortcut $1 for $PWD"
-         ln -s $PWD $filepath
+      else         
+         ln -s "$PWD" "$filepath"
+         if [ $? -eq 0 ]; then
+            printf "OK: Shortcut $1 for $PWD added\n"
+         else
+            printf "ERROR: Failed to create shortcut $1 for $PWD\n"
+            return 1
+         fi
       fi 
    fi
 }
@@ -122,21 +126,27 @@ cdf() {
    else
       # Check if argument is a valid basename
       if ! _validate_basename "$1"; then
-         echo "ERROR: Invalid name for shortcut"
+         printf "ERROR: Invalid name for shortcut\n"
          return 1
       fi
       filepath="$CDFPATH"/"$1"
       if [ -L "$filepath" ]; then
-         echo "Following the symbolic link: $filepath"
+         printf "Following the symbolic link: $filepath\n"
          real_path=$(realpath "$filepath")
-         cd $real_path
-         echo You are now here:
-         echo "    $(pwd)"
+         cd "$real_path"
+         if [ $? -eq 0 ]; then
+            printf "You are now here: $(pwd)\n"
+         else
+            printf "ERROR: Failed to change directory to $real_path\n"
+            return 1
+         fi
       else
-         echo "ERROR: Shortcut $1 does not exist as a symbolic link in $CDFPATH"
+         printf "ERROR: Shortcut $1 does not exist as a symbolic link in $CDFPATH\n"
+         return 1
       fi
    fi
 }
+
 # Define autocomplete helper (currently limited to Bash)
 # Credits to ChatGPT 4
 _cdf_autocomplete() {
