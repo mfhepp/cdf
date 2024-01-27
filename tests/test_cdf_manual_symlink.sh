@@ -4,7 +4,12 @@
 test_cdf() {
     # Test if cdf foo works
     cd ../bar
-    cdf foo
+    cdf foo > /dev/null 2>&1
+    local status=$?
+    if [ ! "$status" -eq 0 ]; then
+        echo "ERROR: Command cdf foo not exit with status 0 (actual status: $status)."
+        return 1
+    fi
     if [ "$PWD" = "$real_path" ]; then
         echo "Test Passed: Current directory is $real_path"
     else
@@ -37,7 +42,7 @@ fi
 # Test if symlink points to the proper path
 real_path=$(realpath "$symlink_path")
 if [ "$real_path" = "$PWD" ]; then
-    echo "Test Passed, $symlink_path points to $PWD"
+    echo "Test Passed: $symlink_path points to $PWD"
 else
     echo "ERROR: Symlink at $symlink_path does not point to $PWD"
     echo "  DEBUG: $real_path"
@@ -51,7 +56,7 @@ status=$?
 # Delete symlink in a secure way (rm with symlinks can be a beast!)
 # Check if the variable is not empty and points to a file that is a symbolic link
 if [[ -n "$symlink_path" && -L "$symlink_path" ]]; then
-    echo "INFO: Removing temporary symbolic link: $symlink_path"
+    # echo "INFO: Removing temporary symbolic link: $symlink_path"
     rm "$symlink_path"
 else
     echo "ERROR: \$symlink_path is either empty or $symlink_path is not a symbolic link"

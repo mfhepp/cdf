@@ -1,4 +1,6 @@
 #!/bin/bash
+# TODO: Refactor to functions so that cleanup will work also if test fails
+
 
 # Set-up fixture
 source ../cdf.sh
@@ -17,8 +19,15 @@ else
     echo "Test Passed: No previous symlink $symlink_path."
 fi
 
+# ###############################
 # Test if symlink can be created
-addfav bar
+# ###############################
+addfav bar > /dev/null 2>&1
+status=$?
+if [ ! "$status" -eq 0 ]; then
+    echo "ERROR: Command did not exit with status 0 (actual status: $status)."
+    exit 1
+fi
 if [ ! -L "$symlink_path" ]; then
     echo "ERROR: Symlink at $symlink_path has not been created."
     exit 1
@@ -27,7 +36,7 @@ fi
 # Test if symlink points to the proper path
 real_path=$(realpath "$symlink_path")
 if [ "$real_path" = "$PWD" ]; then
-    echo "Test Passed, $symlink_path points to $PWD"
+    echo "Test Passed: $symlink_path points to $PWD"
 else
     echo "ERROR: Symlink at $symlink_path does not point to $PWD."
     echo "  DEBUG: $real_path"
@@ -38,7 +47,7 @@ fi
 # Delete symlink in a secure way (rm with symlinks can be a beast!)
 # Check if the variable is not empty and points to a file that is a symbolic link
 if [[ -n "$symlink_path" && -L "$symlink_path" ]]; then
-    echo "INFO: Removing temporary symbolic link: $symlink_path"
+    # echo "INFO: Removing temporary symbolic link: $symlink_path"
     rm "$symlink_path"
 else
     echo "ERROR: \$symlink_path is either empty or $symlink_path is not a symbolic link."

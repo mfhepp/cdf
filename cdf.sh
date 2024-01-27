@@ -7,18 +7,43 @@
 # Available under the MIT License
 
 
-_cdf_check_path() {
-   # Check if variable is not set or the value is not an existing directory
+_cdf_check_environment() {
+   # Check if CDFPATH is set
    if [ -z "${CDFPATH}" ]; then
       echo "ERROR: Favorites path not set via CDFPATH"
       return 1
+   # Check if value is an existing directory
    elif [ ! -d "${CDFPATH}" ]; then
       echo "ERROR: Favorites directory $CDFPATH does not exist"
       return 1  # Exit the function with a non-zero status
    else
       echo INFO: CDFPATH is set to $CDFPATH
-      return 0 
    fi
+   # Check if realpath is available
+   if ! command -v realpath >/dev/null 2>&1; then
+      echo "ERROR: The required realpath command is not supported on this platform."
+      return 1
+   fi
+   if ! command -v ln >/dev/null 2>&1; then
+      echo "ERROR: The required ln command is not supported on this platform."
+      return 1
+   fi   
+}
+
+# Function to check if name for shortcut is a safe name for the symbolic link
+_validate_basename() {
+    local input=$1
+    if [ -z "$input" ]; then
+       # echo "ERROR: Argument is empty."
+       return 1
+    fi
+    local sanitized
+    # Remove leading and trailing whitespace and replace forbidden characters
+    sanitized=$(echo "$input" | xargs | sed 's/[^a-zA-Z0-9_-]/_/g')
+    if [[ "$sanitized" != "$input" ]]; then
+        # echo "ERROR: Argument contains invalid characters (consider $sanitized instead)"
+        return 1
+    fi
 }
 
 _cdf_list() {
@@ -37,7 +62,7 @@ _cdf_list() {
 
 addfav() {
    # Define addfav command, adds PWD as a symbolic link
-   if ! _cdf_check_path; then
+   if ! _cdf_check_environment; then
      return 1
    fi
    if [ $# -eq 0 ] || [ "$1" = "--help" ]; then
@@ -62,6 +87,11 @@ addfav() {
         echo "Hint: $CURRENT_DIR expands to $(realpath $CURRENT_DIR)"
         return 1
       fi
+      # Check if argument is a valid basename
+      if ! _validate_basename "$1"; then
+         echo "ERROR: Invalid name for shortcut"
+         return 1
+      fi
       filepath="$CDFPATH/$1"
       if [ -e "$filepath" ]; then
          echo "ERROR: Shortcut $1 is already in use (or another file or directory $filepath exists)"
@@ -75,7 +105,7 @@ addfav() {
 
 cdf() {
    # Define cdf command ("change to favorite")
-   if ! _cdf_check_path; then
+   if ! _cdf_check_environment; then
       return 1
    fi
    if [ $# -eq 0 ] || [ "$1" = "--help" ]; then
@@ -90,6 +120,11 @@ cdf() {
       # List all available shortcuts
       _cdf_list
    else
+      # Check if argument is a valid basename
+      if ! _validate_basename "$1"; then
+         echo "ERROR: Invalid name for shortcut"
+         return 1
+      fi
       filepath="$CDFPATH"/"$1"
       if [ -L "$filepath" ]; then
          echo "Following the symbolic link: $filepath"
