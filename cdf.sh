@@ -44,11 +44,12 @@ _validate_basename() {
     local sanitized
     # Remove leading and trailing whitespace and replace forbidden characters
     sanitized=$(echo "$input" | xargs | sed 's/[^a-zA-Z0-9_-]/_/g')
-    if [[ "$sanitized" != "$input" ]]; then
+    if [ "$sanitized" != "$input" ]; then
         # echo "ERROR: Argument contains invalid characters (consider $sanitized instead)"
         return 1
     fi
 }
+
 
 _cdf_list() {
    # List all available shortcuts   
@@ -81,7 +82,8 @@ addfav() {
    else
       # Check that the current directory is neither the place for the symlinks nor a subdirectory therof
       CURRENT_DIR=$(pwd)
-      if [[ "$CURRENT_DIR" = "$CDFPATH" || "$CURRENT_DIR" == "$CDFPATH"/* ]]; then
+      # Bash-only version: if [[ "$CURRENT_DIR" = "$CDFPATH" || "$CURRENT_DIR" == "$CDFPATH"/* ]]; then
+      if [ "$CURRENT_DIR" = "$CDFPATH" ] || [ "${CURRENT_DIR##$CDFPATH/}" != "$CURRENT_DIR" ]; then
         printf "ERROR: You cannot create shortcuts to the shortcuts folder or its subdirectories\n"
         return 1
       # Check if we are INSIDE a symbolic link
