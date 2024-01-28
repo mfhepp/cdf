@@ -2,7 +2,7 @@
 
 It is often time-consuming to navigate your folder structure in a Bash terminal window, even with auto-complete.
 
-`cdf` is a simple set of utility functions that can be added to your `.bashrc` or `.bash_profile` file and will provide two quite useful new commands, `addfav` ("add to favorites") and `cdf` ("`cd` to favorite"):
+`cdf` is a simple set of utility functions that can be added to your `.bashrc` or `.bash_profile` file (or `~/.zshrc` for `zsh`) and will provide two quite useful new commands, `addfav` ("add to favorites") and `cdf` ("`cd` to favorite"):
 
 ## Demo
 
@@ -35,7 +35,7 @@ cdf papers
 
 ## Installation (UNIX/OSX only)
 
-### Simple
+### Simple 
 
 1. Download the tool from Github to your computer
   - **Option 1:** With `git clone`:
@@ -65,16 +65,16 @@ cdf papers
     mkdir ~/myshortcuts
     ```
     On OSX, it is better to put this somewhere under the `~/Documents` folder due to Apple's default permissions scheme.
-2. Depending on your system, open either `~/.bashrc` or `~/.bash_profile` with a text editor. You may need to turn on the display of hidden files (starting with a dot) in the OSX Finder with <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>.</kbd> (dot).
-3. At the end of the `~/.bashrc` or `~/.bash_profile` file, insert the following lines:
+2. Depending on your system, open either `~/.bashrc` or `~/.bash_profile` with a text editor (or `~/.zshrc` for `zsh`). You may need to turn on the display of hidden files (starting with a dot) in the OSX Finder with <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>.</kbd> (dot).
+3. At the end of the `~/.bashrc` or `~/.bash_profile` (or `~/.zshrc`) file, insert the following lines:
     ```bash
     export CDFPATH=~/myshortcuts
     ```
     Replace `~/myshortcuts` with the absolute path of your chosen directory for the shortcuts (e.g. `~/Documents/myshortcuts`; note that `~/` is a shortcut for your user directory on Unix systems; you can also use the full path.). **Save the file, but keep it open.**
-4. After these lines, insert the entire contents [from the `cdf.sh` file from this repository](https://raw.githubusercontent.com/mfhepp/cdf/main/cdf.sh). You can directly copy-and-paste it from the link. **Save and close the `~/.bashrc` or `~/.bash_profile` file.**
+4. After these lines, insert the entire contents [from the `cdf.sh` file from this repository](https://raw.githubusercontent.com/mfhepp/cdf/main/cdf.sh). You can directly copy-and-paste it from the link. **Save and close the `~/.bashrc` or `~/.bash_profile`** (or `~/.zshrc`) file.
 5. Open a new terminal window for the changes to take effect.
 
-**Note:** Always backup your `~/.bashrc` or `~/.bash_profile` files prior to installing this tool. If not, please do not blame me if things go wrong. The install script tries to create backups automatically.
+**Note:** Always backup your `~/.bashrc` or `~/.bash_profile` (or `~/.zshrc` for `zsh`) files prior to installing this tool. If not, please do not blame me if things go wrong. The install script tries to create backups automatically.
 
 ### Installation for `zsh`
 
@@ -206,7 +206,7 @@ Pictures/
 
 This is because OSX, by default, grants at least read-access to all users on the given machine, via the `staff` usergroup.
 
-If you were to use the `source` command to include the `cdf.sh` script within your `.bashrc` or `.bash_profile` file, you must make sure that the respective directory cannot be written to by other users. Otherwise, someone could inject arbitrary Bash commands into your environment. **This is why the install script instead *copies the contents of that script* to your Bash profile.**
+If you were to use the `source` command to include the `cdf.sh` script within your `.bashrc` or `.bash_profile` file (or `.zshrc` for `zsh`), you must make sure that the respective directory cannot be written to by other users. Otherwise, someone could inject arbitrary Bash commands into your environment. **This is why the install script instead *copies the contents of that script* to your Bash profile.**
 
 ## Credits and acknowledgments
 

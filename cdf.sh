@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # cdf.sh
-# Version 0.3.1
+# Version 0.4
 # (C) 2024 by Martin Hepp, https://www.heppnetz.de
 # Github repository: https://github.com/mfhepp/cdf
 # Available under the MIT License
