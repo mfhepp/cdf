@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # install.sh
-# Version 0.3
+# Version 0.3.1
 # (C) 2024 by Martin Hepp, https://www.heppnetz.de
 # Github repository: https://github.com/mfhepp/cdf
 # Available under the MIT License
@@ -36,7 +36,11 @@ else
     printf "Using existing CDFPATH: $CDFPATH\n"
     install_dir="$CDFPATH"
 fi
-mkdir -p $install_dir
+mkdir -p "$install_dir"
+if [ ! $? -eq 0 ]; then
+    printf "ERROR: Failed to find or to create $install_dir\n"
+    exit 1
+fi
 # Check if both ~/.bash_profile and ~/.bashrc exist
 if [ -f "$HOME/.bash_profile" ] && [ -f "$HOME/.bashrc" ]; then
     printf "ERROR: Both ~/.bash_profile and ~/.bashrc exist\n"
@@ -58,11 +62,17 @@ while true; do
     backup_path="${bash_config}.${counter}.bak"
     if [ ! -f "$backup_path" ]; then
         cp "$bash_config" "$backup_path"
-        printf "Backup created as $backup_path\n"
-        break
+        if [ $? -eq 0 ]; then
+             printf "Backup created as $backup_path\n"
+             break
+        else
+            printf "ERROR: Failed to create backup of ${bash_config}\n"
+        exit 1
+        fi
     fi
     ((counter++))
 done
+
 # Check if the cdf.sh exists
 if [ ! -f "cdf.sh" ]; then
     printf "ERROR: File cdf.sh does not exist\n"
@@ -84,9 +94,17 @@ if grep -q "$start_marker" "$bash_config" && grep -q "$end_marker" "$bash_config
     if [ "$os" = "Linux" ]; then
         # Linux sed syntax
         sed -i "/$start_marker/,/$end_marker/d" "$bash_config"
+        if [ ! $? -eq 0 ]; then
+            printf "ERROR: Failed to find modify $bash_config, compare with backup at $backup_path\n"
+            exit 1
+        fi
     elif [ "$os" = "Darwin" ]; then
         # macOS sed syntax
         sed -i '' "/$start_marker/,/$end_marker/d" "$bash_config"
+        if [ ! $? -eq 0 ]; then
+            printf "ERROR: Failed to find modify $bash_config, compare with backup at $backup_path\n"
+            exit 1
+        fi
     else
         printf "ERROR: Unsupported operating system: $os\n"
         exit 1
@@ -100,11 +118,18 @@ else
 fi
 
 # Adding functions etc. to bash config file
-echo >> "$bash_config"
-echo "# >>> CDF initalize >>>" >> "$bash_config"
-echo "# Setting path for shortcuts" >> "$bash_config"
-echo "export CDFPATH=$install_dir" >> "$bash_config"
-echo "# Added content from cdf.sh" >> "$bash_config"
-cat cdf.sh >> "$bash_config"
-echo "# <<< CDF initalize <<<" >> "$bash_config"
-printf "SUCCESS: Installation completed.\n"
+status=0
+echo "# >>> CDF initalize >>>" >> "$bash_config"; status=$((status + $?))
+echo "# Setting path for shortcuts" >> "$bash_config"; status=$((status + $?))
+echo "export CDFPATH=$install_dir" >> "$bash_config"; status=$((status + $?))
+echo "# Added content from cdf.sh" >> "$bash_config"; status=$((status + $?))
+cat cdf.sh >> "$bash_config"; status=$((status + $?))
+echo "# <<< CDF initalize <<<" >> "$bash_config"; status=$((status + $?))
+
+# Check the accumulated status
+if [ $status -eq 0 ]; then
+    printf "SUCCESS: Installation completed.\n"
+else
+    printf "ERROR: Failed to find modify $bash_config, compare with backup at $backup_path\n"
+    exit 1
+fi
