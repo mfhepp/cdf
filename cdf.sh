@@ -156,9 +156,38 @@ cdf() {
 # Define autocomplete helper (currently limited to Bash)
 # Credits to ChatGPT 4
 _cdf_autocomplete() {
-    local cur=${COMP_WORDS[COMP_CWORD]}
-    local IFS=$'\n'  # Change the Internal Field Separator to handle spaces and special characters in file names
-    # Use find to list symbolic links in $CDPATH
-    COMPREPLY=($(compgen -W "$(find $CDFPATH -maxdepth 1 -type l -exec basename {} \;)" -- "$cur"))
+    local cur files
+    if [ -n "$BASH_VERSION" ]; then
+        # Bash environment
+        cur=${COMP_WORDS[COMP_CWORD]}
+    elif [ -n "$ZSH_VERSION" ]; then
+        # Zsh environment
+        cur=${words[CURRENT]}
+    fi
+    # Use a wildcard pattern to get symbolic links
+    local IFS=$'\n'
+    files=()
+    for file in "$CDFPATH"/*; do
+        [ -L "$file" ] && files+=("$(basename "$file")")
+    done
+    if [ -n "$BASH_VERSION" ]; then
+        # Bash completion
+        COMPREPLY=($(compgen -W "${files[*]}" -- "$cur"))
+    elif [ -n "$ZSH_VERSION" ]; then
+        # Zsh completion
+        compadd -- "${files[@]}"
+    fi
 }
-complete -F _cdf_autocomplete cdf
+
+# Set up completion for the shell
+# For the moment, we keep this in cdf.sh
+# This adds a bit of overhead but simplifies the installation
+
+if [ -n "$BASH_VERSION" ]; then
+    complete -F _cdf_autocomplete cdf
+elif [ -n "$ZSH_VERSION" ]; then
+    autoload -U +X compinit && compinit
+    autoload -U +X bashcompinit && bashcompinit
+    compdef _cdf_autocomplete cdf
+fi
+

@@ -30,7 +30,7 @@ cdf papers
   - `addfav` ("add to favorites") 
   - `cdf` ("`cd` to favorite")
 - You can use any **short and memorable name** for your shortcuts, like `pet` or `thesis` (or even `p73`).
-- Supports **auto-complete:** Just type the first few letters and hit the <kbd>Tab</kbd> key.
+- Supports **auto-complete:** Just type the first few letters and hit the <kbd>Tab</kbd> key. Now also for `zsh`.
 - All **shortcuts can also be used in** a GUI tool like **Apple Finder,** because they are simple symbolic links. 
 
 ## Installation (UNIX/OSX only)
@@ -75,6 +75,12 @@ cdf papers
 5. Open a new terminal window for the changes to take effect.
 
 **Note:** Always backup your `~/.bashrc` or `~/.bash_profile` files prior to installing this tool. If not, please do not blame me if things go wrong. The install script tries to create backups automatically.
+
+### Installation for `zsh`
+
+This release should also work with `zsh`, not just Bash. Because this feature is experimental, the installer does not automatically add the code to your `.zshrc` file.
+
+If you want to use `cdf` with `zsh`, simply apply the steps from the manual installation to your user's   `.zshrc` file, typically located at `~/.zshrc`.
 
 ## Usage
 

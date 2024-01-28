@@ -51,10 +51,20 @@ if [ -f "$HOME/.bash_profile" ]; then
     bash_config="$HOME/.bash_profile"
 elif [ -f "$HOME/.bashrc" ]; then
     bash_config="$HOME/.bashrc"
+# Only ZSH but not Bash profile found:
+elif [ -f "$HOME/.zshrc" ]; then
+    bash_config="$HOME/.zshrc"
+    printf "INFO: ZSH configuration found at $bash_config\n"
+    printf "Cannot install automatically, see README.md for manual instructions\n"
+    exit 1
 else
     printf "ERROR: Neither ~/.bash_profile nor ~/.bashrc exists\n"
     printf "Cannot install automatically, see README.md for manual instructions\n"
     exit 1
+fi
+if [ -f "$HOME/.zshrc" ]; then
+    printf "INFO: Additional ZSH configuration found at $HOME/.zshrc"
+    printf "You can also install cdf for ZSH manually, see README.md for instructions\n"
 fi
 printf "Processing $bash_config\n"
 counter=1
