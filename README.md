@@ -233,6 +233,10 @@ There are several other very popular tools for similar purposes, e.g.
   - feature-rich
   - written in Rust
   - requires installation of a binary
+- [nil-two's `cdf`](https://github.com/nil-two/cdf)
+  - the most similiar tool I found (and only after my implementation)
+  - written in Perl
+  - uses a registry file in JSON
 
 Main differences between `cdf` and most of these are as follows:
 
